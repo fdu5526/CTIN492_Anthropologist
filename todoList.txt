@@ -1,0 +1,8 @@
+have voice over
+
+work not in front of unity
+
+have both external and internal narrative for character
+
+mechanics - making WASD more interesting
+	velocity, footstep sounds, screen-bob
