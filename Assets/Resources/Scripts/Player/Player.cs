@@ -42,8 +42,8 @@ public class Player : Physics2DBody {
 
 		playerSpeed = baseSpeed;
 
-		footstepTimer = new Timer(0.1f);
-		footstepSoundTimer = new Timer(0.3f);
+		footstepTimer = new Timer(0.5f);
+		footstepSoundTimer = new Timer(0.5f);
 		footsteps = new Footsteps(30, Resources.Load<Sprite>("Sprites/Player/footstepRight"));
 
 		lv = Vector2.zero;

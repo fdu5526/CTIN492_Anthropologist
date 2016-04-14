@@ -21,6 +21,12 @@ public class DialogueBox : MonoBehaviour {
 	public void SetText (string text) {
 		dialogueText.text = text;
 	}
+
+	public void SetNarration (AudioClip clip) {
+		AudioSource a = GetComponent<AudioSource>();
+		a.clip = clip;
+		a.Play();
+	}
 	
 	// Update is called once per frame
 	void Update () {

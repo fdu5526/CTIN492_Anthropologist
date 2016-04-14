@@ -8,17 +8,24 @@ public class DialogueTrigger : MonoBehaviour {
 	int storyNumber;
 
 	string text;
+	AudioClip clip;
 
 	// Use this for initialization
 	void Awake () {
 		dialogueBox = GameObject.Find("Canvas/DialogueBox").GetComponent<DialogueBox>();
 		text = Resources.Load<TextAsset>("Texts/story" + storyNumber).text;
+		clip = Resources.Load<AudioClip>("Sounds/Story/story" + storyNumber);
 	}
 
 
-	void OnTriggerEnter2D (Collider2D other) {
-		dialogueBox.Activate(true);
-		dialogueBox.SetText(text);
+	void OnTriggerStay2D (Collider2D other) {
+		if (Input.GetKeyDown("e")) {
+			dialogueBox.Activate(true);
+			dialogueBox.SetText(text);
+			GetComponent<Collider2D>().enabled = false;
+			dialogueBox.SetNarration(clip);
+			transform.Find("Prompt").gameObject.SetActive(false);
+		}
 	}
 
 	void OnTriggerExit2D (Collider2D other) {
