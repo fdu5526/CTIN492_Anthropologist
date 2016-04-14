@@ -37,7 +37,7 @@ public class Player : Physics2DBody {
 	protected override void Awake () {
 		base.Awake();
 
-		baseSpeed = 12.0f;
+		baseSpeed = 8.0f;
 
 
 		playerSpeed = baseSpeed;
