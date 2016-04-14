@@ -7,8 +7,9 @@ public class DialogueBox : MonoBehaviour {
 	Text dialogueText;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		Activate(false);
+		dialogueText = transform.Find("Text").GetComponent<Text>();
 	}
 
 
