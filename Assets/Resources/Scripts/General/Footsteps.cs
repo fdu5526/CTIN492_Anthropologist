@@ -47,11 +47,16 @@ public class Footsteps {
 		// left foot or right foot + a bit random shuffling
 		Vector2 p = new Vector2(direction.y, -direction.x) * width;
 		Vector2 v = Random.insideUnitCircle * stepR;
+		Vector3 v3;
 
 		if (currentIndex % 2 == 0) {
-			st.GetComponent<Transform>().position = playerPosition + p + v;
+			v3 = (Vector3)(playerPosition + p + v);
+			v3.z = 2.69f;
+			st.GetComponent<Transform>().position = v3;
 		} else {
-			st.GetComponent<Transform>().position = playerPosition - p + v;
+			v3 = (Vector3)(playerPosition - p + v);
+			v3.z = 2.69f;
+			st.GetComponent<Transform>().position = v3;
 		}
 		
 		st.GetComponent<FootstepParticle>().transparency = 1f;

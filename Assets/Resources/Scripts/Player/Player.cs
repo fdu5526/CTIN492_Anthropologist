@@ -4,13 +4,15 @@ using System.Collections;
 
 public class Player : Physics2DBody {
 
+	public bool isIndoors;
+
 	// player movement variables
 	float baseSpeed;																// how fast player moves
-	float dashSpeed;																// how fast player dash is
 	public float playerSpeed;												// equal to baseSpeed or dashSpeed
 
 	// footsteps variables
 	Timer footstepTimer;														// last time we took a footstep
+	Timer footstepSoundTimer;
 	Footsteps footsteps;														// footsteps following the player
 
 	// other gameobjects that this affects
@@ -28,6 +30,9 @@ public class Player : Physics2DBody {
 	public Vector2 lv;
 
 
+	AudioClip[] indoorFootstepSounds, outdoorFootstepSounds;
+
+
 	// Use this for initialization
 	protected override void Awake () {
 		base.Awake();
@@ -38,6 +43,7 @@ public class Player : Physics2DBody {
 		playerSpeed = baseSpeed;
 
 		footstepTimer = new Timer(0.1f);
+		footstepSoundTimer = new Timer(0.3f);
 		footsteps = new Footsteps(30, Resources.Load<Sprite>("Sprites/Player/footstepRight"));
 
 		lv = Vector2.zero;
@@ -49,6 +55,16 @@ public class Player : Physics2DBody {
 		shadowAnimator = playerShadow.GetComponent<Animator>();
 		audios = GetComponents<AudioSource>();
 		mainCamera = GameObject.Find("Main Camera");
+
+
+		indoorFootstepSounds = new AudioClip[3];
+		indoorFootstepSounds[0] = Resources.Load<AudioClip>("Sounds/Player/footstep_floor1");
+		indoorFootstepSounds[1] = Resources.Load<AudioClip>("Sounds/Player/footstep_floor2");
+		indoorFootstepSounds[2] = Resources.Load<AudioClip>("Sounds/Player/footstep_floor3");
+		outdoorFootstepSounds = new AudioClip[3];
+		outdoorFootstepSounds[0] = Resources.Load<AudioClip>("Sounds/Player/footstep_land1");
+		outdoorFootstepSounds[1] = Resources.Load<AudioClip>("Sounds/Player/footstep_land2");
+		outdoorFootstepSounds[2] = Resources.Load<AudioClip>("Sounds/Player/footstep_land3");
 	}
 
 	// wrapper for working with animator state machine for both sprite and shadow
@@ -65,18 +81,28 @@ public class Player : Physics2DBody {
 		// do animation and audio
 		if (rigidbody2d.velocity.sqrMagnitude > 0.2f) {
 			SetAnimatorMovementState((int)AnimationState.Run);
-			if (!audios[0].isPlaying) {
-				audios[0].Play();
-			}
 		} else {
-			audios[0].Stop();
 			SetAnimatorMovementState((int)AnimationState.Idle);
 		}
 
 		// take another step
-		if (footstepTimer.IsOffCooldown && lv.sqrMagnitude > 0.01f) {
-			footsteps.NextStep(transform.position, lv);
-			footstepTimer.Reset();
+		if (lv.sqrMagnitude > 0.01f) {
+			if (!isIndoors && footstepTimer.IsOffCooldown) {
+				footsteps.NextStep(transform.position, lv);
+				footstepTimer.Reset();
+			}
+
+			if (footstepSoundTimer.IsOffCooldown) {
+				if (isIndoors) {
+				audios[0].clip = indoorFootstepSounds[(int)UnityEngine.Random.Range(0f, indoorFootstepSounds.Length)];
+				} else {
+					audios[0].clip = outdoorFootstepSounds[(int)UnityEngine.Random.Range(0f, outdoorFootstepSounds.Length)];
+				}
+
+				audios[0].Play();
+				footstepSoundTimer.Reset();
+			}
+			
 		}
 	}
 
@@ -102,8 +128,8 @@ public class Player : Physics2DBody {
 	// Update is called once per frame, for collecting user input
 	void Update () {
 
-		float lx, ly, rx, ry;
-		lx = ly = rx = ry = 0f;
+		float lx, ly;
+		lx = ly = 0f;
 		
 		
 		// left X
