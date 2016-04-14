@@ -19,7 +19,7 @@ public class DialogueTrigger : MonoBehaviour {
 
 
 	void OnTriggerStay2D (Collider2D other) {
-		if (Input.GetKeyDown("e")) {
+		if (Input.GetKey("e")) {
 			dialogueBox.Activate(true);
 			dialogueBox.SetText(text);
 			GetComponent<Collider2D>().enabled = false;
