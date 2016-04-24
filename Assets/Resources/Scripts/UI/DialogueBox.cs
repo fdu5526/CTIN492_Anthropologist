@@ -5,16 +5,32 @@ using System.Collections;
 public class DialogueBox : MonoBehaviour {
 
 	Text dialogueText;
+	bool isActive;
 
 	// Use this for initialization
 	void Awake () {
-		Activate(false);
+		isActive = false;
+		GetComponent<CanvasGroup>().alpha = 0f;
 		dialogueText = transform.Find("Text").GetComponent<Text>();
 	}
 
 
+
+	IEnumerator Fade (bool fadeIn) {
+		float duration = 1f;
+		float startTime = Time.time;
+		while (Time.time - startTime < duration) {
+			float d = (Time.time - startTime) / duration;
+
+			GetComponent<CanvasGroup>().alpha = fadeIn ? d : 1f - d;
+			yield return 1;
+		}
+	}
+
+
 	public void Activate (bool activate) {
-		GetComponent<CanvasGroup>().alpha = activate ? 1f : 0f;
+		isActive = activate;
+		StartCoroutine(Fade(activate));
 	}
 
 

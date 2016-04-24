@@ -1,8 +1,5 @@
-have voice over
+finish story
 
-work not in front of unity
+extend walking distances
 
-have both external and internal narrative for character
-
-mechanics - making WASD more interesting
-	velocity, footstep sounds, screen-bob
+more environments

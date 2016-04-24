@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class DialogueTrigger : MonoBehaviour {
@@ -7,25 +7,45 @@ public class DialogueTrigger : MonoBehaviour {
 	[SerializeField]
 	int storyNumber;
 
-	string text;
+	float[] timings;
+	string[] texts;
 	AudioClip clip;
+
+	bool started;
+	int currentIndex;
+	float startTime;
 
 	// Use this for initialization
 	void Awake () {
 		dialogueBox = GameObject.Find("Canvas/DialogueBox").GetComponent<DialogueBox>();
-		text = Resources.Load<TextAsset>("Texts/story" + storyNumber).text;
 		clip = Resources.Load<AudioClip>("Sounds/Story/story" + storyNumber);
+
+
+		string s = Resources.Load<TextAsset>("Texts/story" + storyNumber).text;
+		string[] data = s.Split('\n');
+		Debug.Assert(data.Length % 2 == 0);
+		
+		texts = new string[data.Length / 2];
+		for (int i = 0; i < texts.Length; i++) {
+			texts[i] = data[i * 2];
+		}
+
+		timings = new float[data.Length / 2];
+		for (int i = 0; i < timings.Length; i++) {
+			timings[i] = float.Parse(data[i * 2 + 1]);
+		}
+
 	}
 
 
 	void OnTriggerStay2D (Collider2D other) {
-		if (Input.GetKey("e")) {
-			dialogueBox.Activate(true);
-			dialogueBox.SetText(text);
-			GetComponent<Collider2D>().enabled = false;
-			dialogueBox.SetNarration(clip);
-			transform.Find("Prompt").gameObject.SetActive(false);
-		}
+		started = true;
+		currentIndex = 0;
+		startTime = Time.time;
+		dialogueBox.Activate(true);
+		dialogueBox.SetText(texts[currentIndex]);
+		dialogueBox.SetNarration(clip);
+		GetComponent<Collider2D>().enabled = false;
 	}
 
 	void OnTriggerExit2D (Collider2D other) {
@@ -34,6 +54,17 @@ public class DialogueTrigger : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (started) {
+
+			if (Time.time - startTime > timings[currentIndex]) {
+				currentIndex++;
+				if (currentIndex >= timings.Length) {
+					started = false;
+					dialogueBox.Activate(false);
+				} else {
+					dialogueBox.SetText(texts[currentIndex]);
+				}
+			}
+		}
 	}
 }
