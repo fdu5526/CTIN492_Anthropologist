@@ -1,5 +1,4 @@
 finish story
 
-extend walking distances
-
 more environments
+	extend walking distances
