@@ -38,7 +38,18 @@ public class DialogueTrigger : MonoBehaviour {
 	}
 
 
-	void OnTriggerStay2D (Collider2D other) {
+	public void Stop () {
+		started = false;
+	}
+
+
+	void OnTriggerEnter2D (Collider2D other) {
+
+		DialogueTrigger[] d = FindObjectsOfType(typeof(DialogueTrigger)) as DialogueTrigger[];
+		for (int i = 0; i < d.Length; i++) {
+			d[i].Stop();
+		}
+
 		started = true;
 		currentIndex = 0;
 		startTime = Time.time;
@@ -48,14 +59,9 @@ public class DialogueTrigger : MonoBehaviour {
 		GetComponent<Collider2D>().enabled = false;
 	}
 
-	void OnTriggerExit2D (Collider2D other) {
-		dialogueBox.Activate(false);
-	}
-	
 	// Update is called once per frame
 	void Update () {
 		if (started) {
-
 			if (Time.time - startTime > timings[currentIndex]) {
 				currentIndex++;
 				if (currentIndex >= timings.Length) {
