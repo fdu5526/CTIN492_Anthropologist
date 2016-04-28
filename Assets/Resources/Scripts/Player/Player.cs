@@ -38,7 +38,7 @@ public class Player : Physics2DBody {
 		base.Awake();
 
 		baseSpeed = 5.0f;
-		//baseSpeed = 24.0f;
+		baseSpeed = 24.0f;
 
 
 		playerSpeed = baseSpeed;
