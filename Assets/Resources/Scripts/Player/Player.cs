@@ -36,6 +36,7 @@ public class Player : Physics2DBody {
 	// Use this for initialization
 	protected override void Awake () {
 		base.Awake();
+		Cursor.visible = false;
 
 		baseSpeed = 5.0f;
 		//baseSpeed = 24.0f;
